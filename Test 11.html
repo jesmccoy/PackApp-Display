@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PackApp Test Display with Random Orders</title>
+  <link rel = "stylesheet" type = "text/css" href="cssV1.css">
+  <style>
+    .order {
+              cursor: pointer;
+              margin-top: 40px;
+              position: relative;
+              top: 50px;
+              left: 360px;
+              text-align: left;
+              line-height: 20px;
+              font-family: Calibri;
+              font-weight: bold;
+              font-size: 18px;
+              width: 42%;
+
+    }
+    .box {
+              cursor: pointer;
+              margin-top: 40px;
+              position: relative;
+
+    }
+              #imageContainer {
+              position: absolute;
+              top: 345px;
+              left: 79.75%;
+              width:180px;
+              height:150px;
+              }
+
+              #selectedOrderImage {
+              position: absolute;
+              width: 190px; !important;
+              height: 190px;
+              }
+
+	      #selectedBoxImage {
+		position:absolute;
+		width: 255px;
+		height: 250px;
+		right: 908px;
+		bottom: 162px;
+	      }
+
+     .hightlight {
+	outline: 2px solid blue;
+	}		
+
+  </style>
+</head>
+<body>
+  <div id="orderContainer"></div>
+  <div id="imageContainer"></div>
+
+  <script>
+
+    var orders = [
+      { name: "Catan Board Game (Base Game) | Family Board Game", orderImage: "Catan.jpg", boxImage: "A8-81.jpg" },
+      { name: "GRV Smart Watch for iOS and Android Phones, Watches for Men Women", orderImage: "Watch.jpg", boxImage: "M2.jpg"},
+      { name: "Sennheiser HD 350BT Bluetooth 5.0 Wireless Headphone - 30-Hour Battery Life", orderImage: "Headphones.jpg", boxImage: "A5-118.jpg"},
+      { name: "Mini Drone with Camera for Adults Kids - 1080P HD FPV Camera", orderImage: "Drone.jpg", boxImage: "A4-28.jpg"},
+      { name: "Funkoverse: Marvel 100 Avengers 4-Pack", orderImage: "Pop Game.jpg", boxImage: "A4-28.jpg"},
+      { name: "HOST Cooling Cup Set of 4 Plastic Double Wall Insulated Freezable Drink Chilling Tumbler with Freezing Gel", orderImage: "Drinks.jpg", boxImage: "A5-118.jpg"},
+      { name: "TSIODFO Men's Sneakers Sport Running Athletic Tennis Walking Shoes", orderImage: "Tennis Shoes.jpg", boxImage: "D1-170.jpg"},   
+      { name: "Apple iPhone 13 Pro (256GB, Graphite) [Locked] + Carrier Subscription", orderImage: "iPhone.jpg", boxImage: "B5-10.jpg"},   
+      { name: "Ring Video Doorbell (Venetian Bronze) bundle with Echo Show 5 (3rd Gen) ", orderImage: "Ring.jpg", boxImage: "B2-56.jpg" },   
+      { name: "Gildan Men's Crew T-Shirts, Multipack, Style G1100", orderImage: "Shirts.jpg", boxImage: "A8-81.jpg" },   
+      { name: "Welch's Fruit Snacks, Mixed Fruit, Gluten Free, Bulk Pack, Individual Single Serve Bags, 0.8 oz (Pack of 40)", orderImage: "Welch.jpg", boxImage: "A10-143.jpg"},   
+      { name: "Softsoap Liquid Hand Soap, Fresh Breeze - 7.5 Fl Oz (Pack of 6)", orderImage: "Soap.jpg", boxImage: "A7-93.jpg"},   
+      { name: "BOSSWIN Blue Light Glasses, 2 Pack, Fashion Round Half Frame, Computer/Game/Reading/TV Blue Light Blocking Glasses", orderImage: "Glasses.jpg", boxImage: "A6-50.jpg" },   
+      { name: "Tatuo Patriotic Decorations, 4th of July Pleated Fan Flags American US Bunting Flag Stars and Stripes Flag Banner for Independence Day Memorial Day and Labour Day", orderImage: "4th.jpg", boxImage: "A8-81.jpg"},   
+      { name: "Red Bull Energy Drink, 12 Fl Oz, 24 Cans ", orderImage: "Red Bull.jpg", boxImage: "A12-168.jpg"},
+
+	];
+
+
+    function shuffle(array) {
+      var currentIndex = array.length, temporaryValue, randomIndex;
+
+      while (0 !== currentIndex) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+
+      return array;
+    }
+
+    function displayOrders() {
+      var orderContainer = document.getElementById("orderContainer");
+      orderContainer.innerHTML = "";
+
+      shuffle(orders);
+
+      var maxItems = Math.floor(Math.random() * 6) + 1;
+      var selectedOrders = orders.slice(0, maxItems);
+
+      selectedOrders.forEach(function (order) {
+        var orderElement = document.createElement("div");
+        orderElement.textContent = order.name;
+        orderElement.classList.add("order");
+
+        orderElement.addEventListener("click", function () {
+          displayImages(order.orderImage,order.boxImage);
+        });
+
+        orderContainer.appendChild(orderElement);
+      });
+    }
+
+    function displayImages(orderImage, boxImage) {
+      var imageContainer = document.getElementById("imageContainer");
+      imageContainer.innerHTML = "";
+
+      var orderImageElement = document.createElement("img"); 
+	orderImageElement.id = "selectedOrderImage";
+      orderImageElement.src = orderImage;
+
+      var boxImageElement = document.createElement("img");
+	boxImageElement.id = "selectedBoxImage";
+	boxImageElement.src = boxImage;
+
+      imageContainer.appendChild(orderImageElement);
+      imageContainer.appendChild(boxImageElement);
+    }
+
+
+	function highlightOrder(orderElement) {
+	var orders = document.getElementsByClassName("order");
+	for (var i = 0; i < orders.length; i++) {
+	orders[i].classList.remove("highlight");	
+
+	}	
+	orderElement.classList.add("highlight");
+	}
+	
+	var currentIndex = 0
+	var orderElements;
+
+	function navigateOrders(event) {
+		if (event.key === "ArrowUp") {
+		currentIndex = (currentIndex - 1 + orders.length) % orders.length;
+		} else if (event.key === "ArrowDown") { 
+			currentIndex = (currentIndex + 1) % orders.length;
+	}
+
+		var currentOrderElement = orderElements[currentIndex];
+		highlightOrder(currentOrderElement);
+		displayImages(orders[currentIndex].orderImage, orders[currentIndex].boxImage);
+	}
+
+
+    displayOrders();
+
+	document.addEventListener("keyup", function(event) {
+	if (event.key === "Enter") {
+		location.reload();
+
+	} else if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+		navigateOrders(event);
+}
+});
+
+	orderElements = Array.from(document.getElementsByClassName("order"));
+		orderElements.forEach(function(orderElement,index) {
+		orderElement.addEventListener("click", function() {
+			currentIndex = index;
+			highlightOrder(orderElement);
+;
+		
+	
+	displayImages(orders[currentIndex].orderImage, orders[currentIndex].boxImage);
+		});
+	});
+  </script>
+</body>
+</html>
